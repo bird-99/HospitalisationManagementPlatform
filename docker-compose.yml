@@ -1,0 +1,40 @@
+services:
+  db:
+    container_name: postgres_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "hospitalisation_management"
+    ports:
+      - "5432:5432" # Map host port 5432 to container port 5432
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist data in a named volume
+      - ./initdb:/docker-entrypoint-initdb.d # Initialize the database with a script
+
+
+  app:
+    container_name: hospital_app
+    build:
+      context: . 
+      dockerfile: Dockerfile # Specifies the Dockerfile to use
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000
+    volumes:
+      - .:/app # Mount the current directory to /app in the container
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "password"
+      DB_NAME: "hospitalisation_management"
+      DB_HOST: "db" # Use the service name as the host
+      DB_PORT: "5432"
+    depends_on:
+      - db
+
+
+volumes:  
+  postgres_data:
+   
+ 
+
