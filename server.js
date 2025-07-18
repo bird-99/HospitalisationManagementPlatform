@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { pool } = require('./db/client');
+const pool = require('./db/client');
 const app = express();
 
 // Middleware to handle JSON requests
